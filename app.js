@@ -1,13 +1,9 @@
 const wrapper = document.querySelector(".extensionWrapper");
-const buttonAll = document.querySelector(".btn1");
-const buttonActive = document.querySelector(".btn2");
-const buttonInactive = document.querySelector(".btn3");
-const buttonRemove = document.querySelector(".btnRemove");
-const buttonSwitch = document.querySelector(".switch");
+const upperContent = document.querySelector(".navTab");
+const layoutContainer = document.querySelector(".genLayout"); 
 
 const extensions = [
   {
-    id: 1,
     logo: "./images/logo-devlens.svg",
     name: "DevLens",
     description:
@@ -15,21 +11,18 @@ const extensions = [
     isActive: true,
   },
   {
-    id: 2,
     logo: "./images/logo-style-spy.svg",
     name: "StyleSpy",
     description: "Instantly analyze and copy CSS from any webpage element.",
     isActive: true,
   },
   {
-    id: 3,
     logo: "./images/logo-speed-boost.svg",
     name: "SpeedBoost",
     description: "Optimizes browser resource usage to accelerate page loading.",
     isActive: false,
   },
   {
-    id: 4,
     logo: "./images/logo-json-wizard.svg",
     name: "JSONWizard",
     description:
@@ -43,7 +36,6 @@ const extensions = [
     isActive: true,
   },
   {
-    id: 5,
     logo: "./images/logo-viewport-buddy.svg",
     name: "ViewportBuddy",
     description:
@@ -51,7 +43,6 @@ const extensions = [
     isActive: false,
   },
   {
-    id: 6,
     logo: "./images/logo-markup-notes.svg",
     name: "Markup Notes",
     description:
@@ -59,7 +50,6 @@ const extensions = [
     isActive: true,
   },
   {
-    id: 7,
     logo: "./images/logo-grid-guides.svg",
     name: "GridGuides",
     description:
@@ -67,28 +57,24 @@ const extensions = [
     isActive: false,
   },
   {
-    id: 8,
     logo: "./images/logo-palette-picker.svg",
     name: "Palette Picker",
     description: "Instantly extracts color palettes from any webpage.",
     isActive: true,
   },
   {
-    id: 9,
     logo: "./images/logo-link-checker.svg",
     name: "LinkChecker",
     description: "Scans and highlights broken links on any page.",
     isActive: true,
   },
   {
-    id: 10,
     logo: "./images/logo-dom-snapshot.svg",
     name: "DOM Snapshot",
     description: "Capture and export DOM structures quickly.",
     isActive: false,
   },
   {
-    id: 11,
     logo: "./images/logo-console-plus.svg",
     name: "ConsolePlus",
     description:
@@ -97,100 +83,189 @@ const extensions = [
   },
 ];
 
-// 5 steps to create an element or a tag from js and add it to html
-// step 1: create the element or tag
-// const el = document.createElement("h1")
-// step 2: give the created element a classname(option)
-// el.classList.add("newelement")
-// step 3: create the content you want to add to the new element
-// elContent= "i have just been added with js"
-// step 4: add the content to the created element
-// el.innerHtml=elContent
-// step 5: add the created element t0 html
-// wrapper.appendChild(el)
+// THEMES
+const themes = {
+  light: {
+    logo: "./images/logo.svg",
+    navColor: "hsl(200, 60%, 99%)",
+    background: "#ebf4fd",
+    color: "hsl(226, 25%, 17%)",
+    buttonBackground: "hsl(0, 0%, 93%)",
+    themeLogo: "./images/icon-moon.svg",
+    cardBackground: "#ffffff",
+  },
+  dark: {
+    logo: "./images/logo.svg",
+    navColor: "hsl(225, 23%, 24%)",
+    background: "hsl(226, 25%, 17%)",
+    color: "hsl(0, 0%, 93%)",
+    buttonBackground: "hsl(226, 11%, 37%)",
+    themeLogo: "./images/icon-sun.svg",
+    cardBackground: "hsl(225, 20%, 25%)",
+  },
+};
 
-// function to create card
-function createCard(item) {
-  card = document.createElement("div");
-  card.classList.add("extensionCard");
-  cardContent = `
-    <div class="extensionCardTop">
-              <img src=${item.logo} alt="logo-devlens" />
-              <div class="cardContent">
-                <h4>${item.name}</h4>
-                <p>
-                  ${item.description}
-                </p>
-              </div>
-            </div>
-             <div class="cardToggle">
-              <button class="btnRemove">Remove</button>
-              <label class="switch">
-                <input type="checkbox" />
-                <span class="slider round"></span>
-              </label>
-            </div>
+let currentTheme = "light";
 
-    `;
-  card.innerHTML = cardContent;
-  wrapper.appendChild(card);
-}
-extensions.map(function (item) {
-  return createCard(item);
-});
-// function active(item) {
-//   extensions
-//     .filter((item) => {
-//       return item.isActive === true;
-//     })
-//     .map(function (item) {
-//       return createCard(item);
-//     });
-// }
-// function inActive(item) {
-//   extensions
-//     .filter((item) => {
-//       return item.isActive !== true;
-//     })
-//     .map(function (item) {
-//       return createCard(item);
-//     });
-// }
+// CREATE NAV
+function createNav(themeData) {
+  const nav_bar = document.createElement("div");
+  nav_bar.classList.add("navBar");
+  nav_bar.innerHTML = `
+    <img src="${themeData.logo}" alt="logo" class="logo-img" />
+    <button class="navButton theme-toggle">
+      <img src="${themeData.themeLogo}" alt="theme icon" class="theme-icon" />
+    </button>
+  `;
+  upperContent.appendChild(nav_bar);
 
-// function allCards(item) {
-// extensions.map(function (item) {
-//   return createCard(item);
-// });
-// }
-
-buttonAll.addEventListener("click", function () {
-   wrapper.replaceChildren();
-  extensions.map(function (item) {
-    return createCard(item);
+  // Theme toggle
+  const themeToggleBtn = nav_bar.querySelector(".theme-toggle");
+  themeToggleBtn.addEventListener("click", () => {
+    currentTheme = currentTheme === "light" ? "dark" : "light";
+    applyTheme(currentTheme);
+    themeToggleBtn.querySelector("img").src = themes[currentTheme].themeLogo;
   });
-});
-buttonActive.addEventListener("click", function () {
-  wrapper.replaceChildren();
-  extensions
+}
 
-    .filter((item) => {
-      return item.isActive === true;
-    })
-    .map(function (item) {
-      return createCard(item);
+// CREATE TABS
+function createExtensionTabs() {
+  const tabsWrapper = document.createElement("div");
+  tabsWrapper.classList.add("extensionTabs");
+  tabsWrapper.innerHTML = `
+    <h3>Extensions List</h3>
+    <div class="tabButtons">
+      <button class="btn1 active-tab">All</button>
+      <button class="btn2">Active</button>
+      <button class="btn3">Inactive</button>
+    </div>
+  `;
+  layoutContainer.insertBefore(tabsWrapper, wrapper);
+}
+
+// CREATE CARDS
+function createCard(item, index) {
+  const card = document.createElement("div");
+  card.classList.add("extensionCard");
+
+  card.innerHTML = `
+    <div class="extensionCardTop">
+      <img src=${item.logo} alt="${item.name} logo" />
+      <div class="cardContent">
+        <h4>${item.name}</h4>
+        <p>${item.description}</p>
+      </div>
+    </div>
+    <div class="cardToggle">
+      <button class="btnRemove">Remove</button>
+      <label class="switch">
+        <input type="checkbox" ${item.isActive ? "checked" : ""} />
+        <span class="slider round"></span>
+      </label>
+    </div>
+  `;
+
+  wrapper.appendChild(card);
+
+  // Toggle active state
+  card
+    .querySelector("input[type='checkbox']")
+    .addEventListener("change", function () {
+      extensions[index].isActive = this.checked;
     });
+}
+
+// REMOVE CARD
+wrapper.addEventListener("click", function (e) {
+  if (e.target.classList.contains("btnRemove")) {
+    const card = e.target.closest(".extensionCard");
+    if (card) {
+      const index = [...wrapper.children].indexOf(card);
+      if (index !== -1) {
+        extensions.splice(index, 1);
+        card.remove();
+      }
+    }
+  }
 });
-buttonInactive.addEventListener("click", function () {
+
+// THEME APPLICATION
+function applyTheme(themeName) {
+  const theme = themes[themeName];
+  document.body.style.backgroundColor = theme.background;
+  document.body.style.color = theme.color;
+  
+  const headings = document.querySelectorAll("h1, h2, h3, h4, h5, h6");
+  headings.forEach((heading) => {
+    heading.style.color = theme.color;
+  });
+
+
+  document.querySelectorAll(".navTab").forEach((nav) => {
+    nav.style.backgroundColor = theme.navColor;
+  });
+
+  document.querySelectorAll(".navButton").forEach((btn) => {
+    btn.style.backgroundColor = theme.buttonBackground;
+    btn.style.color = theme.color;
+  });
+
+  document.querySelectorAll(".extensionCard").forEach((card) => {
+    card.style.backgroundColor = theme.cardBackground;
+    card.style.color = theme.color;
+    card.querySelectorAll("button").forEach((btn) => {
+      btn.style.backgroundColor = theme.buttonBackground;
+      btn.style.color = theme.color;
+    });
+  });
+}
+
+// SETUP TAB FILTER BUTTONS
+function setupTabEventListeners() {
+  const buttonAll = document.querySelector(".btn1");
+  const buttonActive = document.querySelector(".btn2");
+  const buttonInactive = document.querySelector(".btn3");
+   
+  const allTabButtons = document.querySelectorAll(".tabButtons button");
+
+  // Add click listeners to each button
+  allTabButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      // Remove the active class from all buttons
+      allTabButtons.forEach((b) => b.classList.remove("active-tab"));
+
+      // Add active class to the clicked button
+      btn.classList.add("active-tab");
+    });
+  });
+
+
+  buttonAll.addEventListener("click", () => {
+    wrapper.replaceChildren();
+    extensions.forEach((item, index) => createCard(item, index));
+    applyTheme(currentTheme);
+  });
+
+  buttonActive.addEventListener("click", () => {
+    wrapper.replaceChildren();
+    extensions.forEach((item, index) => {
+      if (item.isActive) createCard(item, index);
+    });
+    applyTheme(currentTheme);
+  });
+
+  buttonInactive.addEventListener("click", () => {
    wrapper.replaceChildren();
-  extensions
-    .filter((item) => {
-      return item.isActive !== true;
-    })
-    .map(function (item) {
-      return createCard(item);
-    });
-});
+   extensions.forEach((item, index) => {
+     if (!item.isActive) createCard(item, index);
+   });
+   applyTheme(currentTheme);
+  });
+}
 
-buttonRemove.addEventListener("click", function () {
-  return extensions.filter((item) => extensions.id !== item.id);
-});
+// INIT
+createNav(themes[currentTheme]);
+createExtensionTabs();
+setupTabEventListeners();
+applyTheme(currentTheme);
+extensions.forEach((item, index) => createCard(item, index));
