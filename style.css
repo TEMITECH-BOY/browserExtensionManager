@@ -65,9 +65,7 @@ body {
   transition: all 0.3s ease;
 }
 
-.tabButtons button:hover {
-  background-color: hsl(3, 86%, 64%); 
-}
+
 
 .tabButtons button.active-tab {
   background-color: hsl(3, 77%, 44%);
